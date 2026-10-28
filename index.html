@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fetchoria</title>
+<meta name="description" content="Save videos, music and pictures from any link.">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  :root {
+    --orange: #ff6a00;
+    --orange-soft: #ffb347;
+    --bg: #fff7ed;
+    --card: #ffffff;
+    --text: #1d1a17;
+    --muted: #6b625a;
+    --line: rgba(0, 0, 0, 0.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17181f;
+      --card: #20222b;
+      --text: #f4f1ee;
+      --muted: #a39b94;
+      --line: rgba(255, 255, 255, 0.09);
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 0 16px calc(104px + env(safe-area-inset-bottom));
+  }
+  main { max-width: 520px; margin: 0 auto; }
+  .hero { text-align: center; padding: 40px 0 8px; }
+  .logo {
+    width: 96px; height: 96px; border-radius: 26px; margin: 0 auto 18px; display: block;
+    box-shadow: 0 14px 30px rgba(255, 106, 0, 0.35);
+  }
+  h1 { margin: 0; font-size: 36px; letter-spacing: -0.5px; color: var(--orange); }
+  .tagline { margin: 6px 0 0; font-size: 18px; color: var(--muted); }
+  h2 { margin: 32px 0 12px; font-size: 20px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px;
+  }
+  .card b { display: block; margin: 6px 0 2px; }
+  .card span { color: var(--muted); font-size: 14px; }
+  .emoji { font-size: 28px; line-height: 1; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    background: var(--card); border: 1px solid var(--line); border-radius: 999px;
+    padding: 6px 14px; font-size: 14px;
+  }
+  ol { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+  li {
+    counter-increment: step; display: flex; gap: 14px; align-items: flex-start;
+    background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+    padding: 14px 16px; margin-bottom: 10px;
+  }
+  li::before {
+    content: counter(step); flex: none; width: 28px; height: 28px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange-soft), var(--orange)); color: #fff;
+    font-weight: 700; display: grid; place-items: center; font-size: 14px;
+  }
+  footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 28px; }
+  .cta {
+    position: fixed; left: 0; right: 0; bottom: 0; padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: linear-gradient(to top, var(--bg) 70%, transparent);
+  }
+  .cta a {
+    display: block; max-width: 520px; margin: 0 auto; text-align: center; text-decoration: none;
+    color: #fff; font-weight: 700; font-size: 17px; padding: 15px; border-radius: 16px;
+    background: linear-gradient(135deg, var(--orange-soft), var(--orange));
+    box-shadow: 0 10px 24px rgba(255, 106, 0, 0.35);
+  }
+  .cta a:active { transform: scale(0.98); }
+</style>
+</head>
+<body>
+<main>
+  <section class="hero">
+    <svg class="logo" viewBox="0 0 640 640" role="img" aria-label="Fetchoria">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ffb347"/><stop offset="1" stop-color="#ff6a00"/>
+        </linearGradient>
+      </defs>
+      <rect width="640" height="640" fill="url(#g)"/>
+      <g fill="#fff" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M190 170 H450 L320 395 Z" stroke-width="46"/>
+        <path d="M185 500 H455" stroke-width="46" fill="none"/>
+      </g>
+    </svg>
+    <h1>fetchoria</h1>
+    <p class="tagline" data-i18n="tagline"></p>
+  </section>
+
+  <h2 data-i18n="featuresTitle"></h2>
+  <div class="grid">
+    <div class="card"><div class="emoji">🎬</div><b data-i18n="fVideo"></b><span data-i18n="fVideoText"></span></div>
+    <div class="card"><div class="emoji">🎵</div><b data-i18n="fAudio"></b><span data-i18n="fAudioText"></span></div>
+    <div class="card"><div class="emoji">🖼</div><b data-i18n="fImage"></b><span data-i18n="fImageText"></span></div>
+    <div class="card"><div class="emoji">🎙</div><b data-i18n="fSong"></b><span data-i18n="fSongText"></span></div>
+  </div>
+
+  <h2 data-i18n="sitesTitle"></h2>
+  <div class="chips">
+    <span class="chip">YouTube</span><span class="chip">Instagram</span><span class="chip">TikTok</span>
+    <span class="chip">Facebook</span><span class="chip">Pinterest</span><span class="chip">X</span>
+    <span class="chip">Reddit</span><span class="chip" data-i18n="more"></span>
+  </div>
+
+  <h2 data-i18n="stepsTitle"></h2>
+  <ol>
+    <li data-i18n="step1"></li>
+    <li data-i18n="step2"></li>
+    <li data-i18n="step3"></li>
+  </ol>
+
+  <footer data-i18n="footer"></footer>
+</main>
+
+<div class="cta"><a id="open" href="https://t.me/Fetchoriabot" data-i18n="open"></a></div>
+
+<script>
+  const BOT_URL = "https://t.me/Fetchoriabot";
+  const TEXTS = {
+    en: {
+      tagline: "Save anything from any link",
+      featuresTitle: "What it does",
+      fVideo: "Video", fVideoText: "Up to 1080p, MP4",
+      fAudio: "Music", fAudioText: "Any video as MP3",
+      fImage: "Pictures", fImageText: "Posts and albums",
+      fSong: "Song finder", fSongText: "Send a voice, get the song",
+      sitesTitle: "Works with", more: "+1000 more",
+      stepsTitle: "How it works",
+      step1: "Copy a link from any app",
+      step2: "Send it to the bot",
+      step3: "Pick Video, MP3 or Pictures",
+      footer: "Free and fast 🧡",
+      open: "🚀 Open the bot",
+    },
+    uz: {
+      tagline: "Istalgan havoladan yuklab oling",
+      featuresTitle: "Nimalar qiladi",
+      fVideo: "Video", fVideoText: "1080p gacha, MP4",
+      fAudio: "Musiqa", fAudioText: "Istalgan videoni MP3 qilib",
+      fImage: "Rasmlar", fImageText: "Postlar va albomlar",
+      fSong: "Qo'shiq topish", fSongText: "Ovoz yuboring, qo'shiqni toping",
+      sitesTitle: "Qaysi saytlar bilan ishlaydi", more: "+1000 ta boshqa",
+      stepsTitle: "Qanday ishlaydi",
+      step1: "Istalgan ilovadan havolani nusxalang",
+      step2: "Botga yuboring",
+      step3: "Video, MP3 yoki Rasmlarni tanlang",
+      footer: "Bepul va tez 🧡",
+      open: "🚀 Botni ochish",
+    },
+    ru: {
+      tagline: "Скачивайте всё по любой ссылке",
+      featuresTitle: "Что умеет",
+      fVideo: "Видео", fVideoText: "До 1080p, MP4",
+      fAudio: "Музыка", fAudioText: "Любое видео в MP3",
+      fImage: "Картинки", fImageText: "Посты и альбомы",
+      fSong: "Поиск песен", fSongText: "Отправьте голосовое и найдите песню",
+      sitesTitle: "Работает с", more: "+1000 других",
+      stepsTitle: "Как это работает",
+      step1: "Скопируйте ссылку из любого приложения",
+      step2: "Отправьте её боту",
+      step3: "Выберите Видео, MP3 или Картинки",
+      footer: "Бесплатно и быстро 🧡",
+      open: "🚀 Открыть бота",
+    },
+  };
+
+  const tg = window.Telegram && window.Telegram.WebApp;
+  const code = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.language_code)
+    || navigator.language || "en";
+  const lang = TEXTS[code.slice(0, 2).toLowerCase()] ? code.slice(0, 2).toLowerCase() : "en";
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    el.textContent = TEXTS[lang][el.dataset.i18n];
+  });
+
+  if (tg) {
+    tg.ready();
+    tg.expand();
+    // Inside Telegram the button closes the app and leaves the user in the bot chat.
+    document.getElementById("open").addEventListener("click", (event) => {
+      event.preventDefault();
+      tg.close();
+    });
+  }
+</script>
+</body>
+</html>
