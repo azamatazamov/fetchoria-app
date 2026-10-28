@@ -67,6 +67,7 @@
     font-weight: 700; display: grid; place-items: center; font-size: 14px;
   }
   footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 28px; }
+  footer a { color: var(--muted); }
   .cta {
     position: fixed; left: 0; right: 0; bottom: 0; padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
     background: linear-gradient(to top, var(--bg) 70%, transparent);
@@ -121,7 +122,7 @@
     <li data-i18n="step3"></li>
   </ol>
 
-  <footer data-i18n="footer"></footer>
+  <footer><span data-i18n="footer"></span> · <a href="legal.html" data-i18n="legal"></a></footer>
 </main>
 
 <div class="cta"><a id="open" href="https://t.me/Fetchoriabot" data-i18n="open"></a></div>
@@ -141,7 +142,7 @@
       step1: "Copy a link from any app",
       step2: "Send it to the bot",
       step3: "Pick Video, MP3 or Pictures",
-      footer: "Free and fast 🧡",
+      footer: "Free and fast 🧡", legal: "Terms and privacy",
       open: "🚀 Open the bot",
     },
     uz: {
@@ -156,7 +157,7 @@
       step1: "Istalgan ilovadan havolani nusxalang",
       step2: "Botga yuboring",
       step3: "Video, MP3 yoki Rasmlarni tanlang",
-      footer: "Bepul va tez 🧡",
+      footer: "Bepul va tez 🧡", legal: "Shartlar va maxfiylik",
       open: "🚀 Botni ochish",
     },
     ru: {
@@ -171,7 +172,7 @@
       step1: "Скопируйте ссылку из любого приложения",
       step2: "Отправьте её боту",
       step3: "Выберите Видео, MP3 или Картинки",
-      footer: "Бесплатно и быстро 🧡",
+      footer: "Бесплатно и быстро 🧡", legal: "Условия и конфиденциальность",
       open: "🚀 Открыть бота",
     },
   };
