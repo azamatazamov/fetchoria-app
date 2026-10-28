@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#ff6a00">
 <title>Fetchoria</title>
 <meta name="description" content="Save videos, music and pictures from any link.">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -13,187 +14,468 @@
     --bg: #fff7ed;
     --card: #ffffff;
     --text: #1d1a17;
-    --muted: #6b625a;
-    --line: rgba(0, 0, 0, 0.08);
+    --muted: #7a7068;
+    --line: rgba(0, 0, 0, 0.07);
+    --field: #fff3e6;
+    --shadow: 0 10px 30px rgba(255, 106, 0, 0.16);
+    --tabbar: 64px;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #17181f;
-      --card: #20222b;
-      --text: #f4f1ee;
-      --muted: #a39b94;
-      --line: rgba(255, 255, 255, 0.09);
-    }
+  :root[data-theme="dark"] {
+    --bg: #14151b;
+    --card: #1f2129;
+    --text: #f5f2ef;
+    --muted: #a59d96;
+    --line: rgba(255, 255, 255, 0.08);
+    --field: #2a2c36;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   }
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; }
   body {
-    margin: 0;
     background: var(--bg);
     color: var(--text);
-    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    padding: 0 16px calc(104px + env(safe-area-inset-bottom));
+    font: 16px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 0 16px calc(var(--tabbar) + 28px + env(safe-area-inset-bottom));
+    min-height: 100vh;
+    -webkit-user-select: none;
+    user-select: none;
   }
-  main { max-width: 520px; margin: 0 auto; }
-  .hero { text-align: center; padding: 40px 0 8px; }
-  .logo {
-    width: 96px; height: 96px; border-radius: 26px; margin: 0 auto 18px; display: block;
-    box-shadow: 0 14px 30px rgba(255, 106, 0, 0.35);
-  }
-  h1 { margin: 0; font-size: 36px; letter-spacing: -0.5px; color: var(--orange); }
-  .tagline { margin: 6px 0 0; font-size: 18px; color: var(--muted); }
-  h2 { margin: 32px 0 12px; font-size: 20px; }
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .card {
-    background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px;
-  }
-  .card b { display: block; margin: 6px 0 2px; }
-  .card span { color: var(--muted); font-size: 14px; }
-  .emoji { font-size: 28px; line-height: 1; }
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip {
-    background: var(--card); border: 1px solid var(--line); border-radius: 999px;
-    padding: 6px 14px; font-size: 14px;
-  }
-  ol { list-style: none; margin: 0; padding: 0; counter-reset: step; }
-  li {
-    counter-increment: step; display: flex; gap: 14px; align-items: flex-start;
-    background: var(--card); border: 1px solid var(--line); border-radius: 18px;
-    padding: 14px 16px; margin-bottom: 10px;
-  }
-  li::before {
-    content: counter(step); flex: none; width: 28px; height: 28px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--orange-soft), var(--orange)); color: #fff;
-    font-weight: 700; display: grid; place-items: center; font-size: 14px;
-  }
-  footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 28px; }
-  footer a { color: var(--muted); }
-  .cta {
-    position: fixed; left: 0; right: 0; bottom: 0; padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
-    background: linear-gradient(to top, var(--bg) 70%, transparent);
-  }
-  .cta a {
-    display: block; max-width: 520px; margin: 0 auto; text-align: center; text-decoration: none;
-    color: #fff; font-weight: 700; font-size: 17px; padding: 15px; border-radius: 16px;
+  input, textarea { -webkit-user-select: text; user-select: text; }
+  main { max-width: 560px; margin: 0 auto; }
+  button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+  :focus-visible { outline: 3px solid var(--orange-soft); outline-offset: 2px; border-radius: 12px; }
+
+  /* top bar */
+  .top { display: flex; align-items: center; justify-content: space-between; padding: 14px 0 6px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 22px; color: var(--orange); letter-spacing: -0.4px; }
+  .brand svg { width: 34px; height: 34px; border-radius: 10px; box-shadow: var(--shadow); }
+  .langs { display: flex; gap: 4px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+  .langs button { padding: 5px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--muted); }
+  .langs button[aria-pressed="true"] { background: var(--orange); color: #fff; }
+
+  /* sections */
+  section[hidden] { display: none; }
+  section { animation: rise .28s ease both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { section { animation: none; } }
+
+  h2 { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 26px 4px 10px; font-weight: 700; }
+
+  /* hero */
+  .hero {
     background: linear-gradient(135deg, var(--orange-soft), var(--orange));
-    box-shadow: 0 10px 24px rgba(255, 106, 0, 0.35);
+    border-radius: 26px; padding: 22px 18px 18px; color: #fff; box-shadow: var(--shadow); margin-top: 8px;
   }
-  .cta a:active { transform: scale(0.98); }
+  .hero h1 { margin: 0 0 4px; font-size: 26px; line-height: 1.15; letter-spacing: -0.5px; }
+  .hero p { margin: 0 0 16px; opacity: .92; font-size: 15px; }
+  .field { display: flex; gap: 8px; align-items: center; background: #fff; border-radius: 16px; padding: 6px 6px 6px 14px; }
+  .field input {
+    flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: inherit; font-size: 16px; color: #1d1a17; padding: 10px 0;
+  }
+  .field input::placeholder { color: #a99e95; }
+  .mini { padding: 9px 12px; border-radius: 12px; background: #fff0e0; color: var(--orange); font-weight: 700; font-size: 14px; }
+  .go {
+    display: block; width: 100%; margin-top: 12px; padding: 15px; border-radius: 16px; font-weight: 800; font-size: 17px;
+    background: #1d1a17; color: #fff; box-shadow: 0 8px 20px rgba(0, 0, 0, .25);
+  }
+  .go:active, .mini:active, .row:active, .tool:active, .tab:active { transform: scale(.98); }
+
+  /* song search */
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 14px; }
+  .card .field { background: var(--field); }
+  .card .field input { color: var(--text); }
+  .card .field input::placeholder { color: var(--muted); }
+  .card .mini { background: var(--orange); color: #fff; }
+
+  /* chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 6px 13px; font-size: 14px; font-weight: 600; }
+
+  /* tips */
+  .tip { margin: 14px 2px 0; padding: 12px 14px; border-radius: 16px; background: var(--field); color: var(--muted); font-size: 14px; }
+  .tip b { color: var(--text); }
+
+  /* steps */
+  ol { list-style: none; margin: 0; padding: 0; counter-reset: s; display: grid; gap: 8px; }
+  li.step { counter-increment: s; display: flex; gap: 12px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; }
+  li.step::before {
+    content: counter(s); flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--orange-soft), var(--orange)); color: #fff; font-weight: 800; font-size: 13px;
+  }
+
+  /* tools */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tool { text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 14px; display: flex; flex-direction: column; gap: 4px; min-height: 120px; }
+  .tool .ic { font-size: 28px; line-height: 1; margin-bottom: 4px; }
+  .tool b { font-size: 15px; }
+  .tool span { color: var(--muted); font-size: 13px; line-height: 1.35; }
+  .tool.wide { grid-column: 1 / -1; min-height: 0; flex-direction: row; align-items: center; gap: 12px; }
+  .tool.wide .ic { margin: 0; }
+
+  /* rows (account) */
+  .list { background: var(--card); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
+  .row { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+  .row:last-child { border-bottom: 0; }
+  .row .ic { width: 34px; height: 34px; display: grid; place-items: center; font-size: 19px; background: var(--field); border-radius: 11px; flex: none; }
+  .row .tx { flex: 1; min-width: 0; }
+  .row .tx b { display: block; font-size: 16px; font-weight: 600; }
+  .row .tx small { color: var(--muted); font-size: 13px; }
+  .row .chev { color: var(--muted); font-size: 20px; }
+
+  footer { text-align: center; color: var(--muted); font-size: 13px; margin: 26px 0 0; }
+  footer a { color: var(--muted); }
+
+  /* toast */
+  .toast {
+    position: fixed; left: 50%; bottom: calc(var(--tabbar) + 24px + env(safe-area-inset-bottom)); transform: translate(-50%, 20px);
+    background: #1d1a17; color: #fff; padding: 11px 16px; border-radius: 14px; font-size: 14px; font-weight: 600;
+    opacity: 0; pointer-events: none; transition: .25s; max-width: calc(100% - 32px); text-align: center; z-index: 30;
+  }
+  .toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+  /* tab bar */
+  nav.tabbar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: flex; justify-content: center;
+    padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+    background: linear-gradient(to top, var(--bg) 72%, transparent);
+  }
+  .tabs { display: flex; width: 100%; max-width: 560px; background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 5px; box-shadow: var(--shadow); }
+  .tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 7px 4px; border-radius: 17px; color: var(--muted); font-size: 12px; font-weight: 700; }
+  .tab svg { width: 24px; height: 24px; }
+  .tab[aria-selected="true"] { background: linear-gradient(135deg, var(--orange-soft), var(--orange)); color: #fff; }
 </style>
 </head>
 <body>
 <main>
-  <section class="hero">
-    <svg class="logo" viewBox="0 0 640 640" role="img" aria-label="Fetchoria">
-      <defs>
-        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#ffb347"/><stop offset="1" stop-color="#ff6a00"/>
-        </linearGradient>
-      </defs>
-      <rect width="640" height="640" fill="url(#g)"/>
-      <g fill="#fff" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M190 170 H450 L320 395 Z" stroke-width="46"/>
-        <path d="M185 500 H455" stroke-width="46" fill="none"/>
-      </g>
-    </svg>
-    <h1>fetchoria</h1>
-    <p class="tagline" data-i18n="tagline"></p>
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 640 640" role="img" aria-label="Fetchoria">
+        <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb347"/><stop offset="1" stop-color="#ff6a00"/></linearGradient></defs>
+        <rect width="640" height="640" fill="url(#g)"/>
+        <g fill="#fff" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M190 170 H450 L320 395 Z" stroke-width="46"/><path d="M185 500 H455" stroke-width="46" fill="none"/>
+        </g>
+      </svg>
+      fetchoria
+    </div>
+    <div class="langs" role="group" aria-label="Language">
+      <button data-lang="en" aria-pressed="false">EN</button>
+      <button data-lang="uz" aria-pressed="false">UZ</button>
+      <button data-lang="ru" aria-pressed="false">RU</button>
+    </div>
+  </header>
+
+  <!-- DOWNLOAD -->
+  <section id="tab-download">
+    <div class="hero">
+      <h1 data-i18n="heroTitle"></h1>
+      <p data-i18n="heroSub"></p>
+      <div class="field">
+        <input id="link" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" data-i18n-ph="linkPh" aria-label="Link">
+        <button class="mini" id="paste" data-i18n="paste"></button>
+      </div>
+      <button class="go" id="download" data-i18n="download"></button>
+    </div>
+    <div class="tip" id="tip" hidden></div>
+
+    <h2 data-i18n="songTitle"></h2>
+    <div class="card">
+      <div class="field">
+        <input id="song" type="search" autocomplete="off" spellcheck="false" data-i18n-ph="songPh" aria-label="Song">
+        <button class="mini" id="search" data-i18n="search"></button>
+      </div>
+    </div>
+
+    <h2 data-i18n="sitesTitle"></h2>
+    <div class="chips">
+      <span class="chip">YouTube</span><span class="chip">Instagram</span><span class="chip">TikTok</span>
+      <span class="chip">Facebook</span><span class="chip">Pinterest</span><span class="chip">X</span>
+      <span class="chip">Reddit</span><span class="chip">Twitch</span><span class="chip">VK</span>
+      <span class="chip">SoundCloud</span><span class="chip" data-i18n="more"></span>
+    </div>
+
+    <h2 data-i18n="stepsTitle"></h2>
+    <ol>
+      <li class="step" data-i18n="step1"></li>
+      <li class="step" data-i18n="step2"></li>
+      <li class="step" data-i18n="step3"></li>
+    </ol>
   </section>
 
-  <h2 data-i18n="featuresTitle"></h2>
-  <div class="grid">
-    <div class="card"><div class="emoji">🎬</div><b data-i18n="fVideo"></b><span data-i18n="fVideoText"></span></div>
-    <div class="card"><div class="emoji">🎵</div><b data-i18n="fAudio"></b><span data-i18n="fAudioText"></span></div>
-    <div class="card"><div class="emoji">🖼</div><b data-i18n="fImage"></b><span data-i18n="fImageText"></span></div>
-    <div class="card"><div class="emoji">🎙</div><b data-i18n="fSong"></b><span data-i18n="fSongText"></span></div>
-  </div>
+  <!-- TOOLS -->
+  <section id="tab-tools" hidden>
+    <h2 data-i18n="toolsTitle"></h2>
+    <div class="grid">
+      <button class="tool" data-cmd="pdf"><div class="ic">📄</div><b data-i18n="tPdf"></b><span data-i18n="tPdfText"></span></button>
+      <button class="tool" data-chat="1"><div class="ic">🎞</div><b data-i18n="tVideo"></b><span data-i18n="tVideoText"></span></button>
+      <button class="tool" data-chat="1"><div class="ic">🎙</div><b data-i18n="tVoice"></b><span data-i18n="tVoiceText"></span></button>
+      <button class="tool" data-focus="song"><div class="ic">🔎</div><b data-i18n="tSong"></b><span data-i18n="tSongText"></span></button>
+      <button class="tool wide" data-focus="link"><div class="ic">🎧</div><div><b data-i18n="tMusicLinks"></b><br><span data-i18n="tMusicLinksText"></span></div></button>
+      <button class="tool wide" data-focus="link"><div class="ic">💬</div><div><b data-i18n="tSubs"></b><br><span data-i18n="tSubsText"></span></div></button>
+      <button class="tool wide" data-focus="link"><div class="ic">🖼</div><div><b data-i18n="tPics"></b><br><span data-i18n="tPicsText"></span></div></button>
+    </div>
+  </section>
 
-  <h2 data-i18n="sitesTitle"></h2>
-  <div class="chips">
-    <span class="chip">YouTube</span><span class="chip">Instagram</span><span class="chip">TikTok</span>
-    <span class="chip">Facebook</span><span class="chip">Pinterest</span><span class="chip">X</span>
-    <span class="chip">Reddit</span><span class="chip" data-i18n="more"></span>
-  </div>
-
-  <h2 data-i18n="stepsTitle"></h2>
-  <ol>
-    <li data-i18n="step1"></li>
-    <li data-i18n="step2"></li>
-    <li data-i18n="step3"></li>
-  </ol>
-
-  <footer><span data-i18n="footer"></span> · <a href="legal.html" data-i18n="legal"></a></footer>
+  <!-- ME -->
+  <section id="tab-me" hidden>
+    <h2 data-i18n="meTitle"></h2>
+    <div class="list">
+      <button class="row" data-cmd="settings"><span class="ic">⚙️</span><span class="tx"><b data-i18n="rSettings"></b><small data-i18n="rSettingsText"></small></span><span class="chev">›</span></button>
+      <button class="row" data-cmd="history"><span class="ic">🕘</span><span class="tx"><b data-i18n="rHistory"></b><small data-i18n="rHistoryText"></small></span><span class="chev">›</span></button>
+      <button class="row" data-cmd="invite"><span class="ic">🎁</span><span class="tx"><b data-i18n="rInvite"></b><small data-i18n="rInviteText"></small></span><span class="chev">›</span></button>
+      <button class="row" data-cmd="language"><span class="ic">🌍</span><span class="tx"><b data-i18n="rLanguage"></b><small data-i18n="rLanguageText"></small></span><span class="chev">›</span></button>
+    </div>
+    <h2 data-i18n="moreTitle"></h2>
+    <div class="list">
+      <button class="row" data-cmd="share"><span class="ic">🔗</span><span class="tx"><b data-i18n="rShare"></b></span><span class="chev">›</span></button>
+      <button class="row" data-cmd="donate"><span class="ic">❤️</span><span class="tx"><b data-i18n="rDonate"></b><small data-i18n="rDonateText"></small></span><span class="chev">›</span></button>
+      <button class="row" data-cmd="contact"><span class="ic">✉️</span><span class="tx"><b data-i18n="rContact"></b></span><span class="chev">›</span></button>
+      <button class="row" data-cmd="help"><span class="ic">❓</span><span class="tx"><b data-i18n="rHelp"></b></span><span class="chev">›</span></button>
+      <button class="row" data-cmd="legal"><span class="ic">📄</span><span class="tx"><b data-i18n="rLegal"></b></span><span class="chev">›</span></button>
+    </div>
+    <footer><span data-i18n="footer"></span> · <a href="legal.html" data-i18n="legal"></a></footer>
+  </section>
 </main>
 
-<div class="cta"><a id="open" href="https://t.me/Fetchoriabot" data-i18n="open"></a></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<nav class="tabbar">
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="download" aria-selected="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>
+      <span data-i18n="tabDownload"></span>
+    </button>
+    <button class="tab" role="tab" data-tab="tools" aria-selected="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg>
+      <span data-i18n="tabTools"></span>
+    </button>
+    <button class="tab" role="tab" data-tab="me" aria-selected="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>
+      <span data-i18n="tabMe"></span>
+    </button>
+  </div>
+</nav>
 
 <script>
-  const BOT_URL = "https://t.me/Fetchoriabot";
+  const BOT = "Fetchoriabot";
   const TEXTS = {
     en: {
-      tagline: "Save anything from any link",
-      featuresTitle: "What it does",
-      fVideo: "Video", fVideoText: "Up to 1080p, MP4",
-      fAudio: "Music", fAudioText: "Any video as MP3",
-      fImage: "Pictures", fImageText: "Posts and albums",
-      fSong: "Song finder", fSongText: "Send a voice, get the song",
+      heroTitle: "Save anything from any link", heroSub: "Videos, music and pictures in seconds.",
+      linkPh: "Paste a link here", paste: "Paste", download: "Download",
+      songTitle: "Find a song", songPh: "Song or artist name", search: "Search",
       sitesTitle: "Works with", more: "+1000 more",
-      stepsTitle: "How it works",
-      step1: "Copy a link from any app",
-      step2: "Send it to the bot",
-      step3: "Pick Video, MP3 or Pictures",
+      stepsTitle: "How it works", step1: "Copy a link from any app", step2: "Paste it here and press Download", step3: "Pick Video, MP3 or Pictures in the chat",
+      tabDownload: "Download", tabTools: "Tools", tabMe: "Me",
+      toolsTitle: "Everything Fetchoria can do",
+      tPdf: "Pictures → PDF", tPdfText: "Send photos, get one PDF",
+      tVideo: "Video → GIF / MP3", tVideoText: "Send a video file in the chat",
+      tVoice: "Song by voice", tVoiceText: "Send a voice message, I name the song",
+      tSong: "Song search", tSongText: "Type a name, get the MP3",
+      tMusicLinks: "Spotify & Apple Music links", tMusicLinksText: "Paste the link, get the song as MP3",
+      tSubs: "YouTube subtitles", tSubsText: "Get .srt files for any YouTube video",
+      tPics: "Pictures and albums", tPicsText: "Download photos from posts and pins",
+      meTitle: "My account", moreTitle: "More",
+      rSettings: "Settings", rSettingsText: "Default quality, auto MP3",
+      rHistory: "History", rHistoryText: "Your latest downloads",
+      rInvite: "Invite friends", rInviteText: "Your personal link and bonuses",
+      rLanguage: "Language", rLanguageText: "Change the bot language",
+      rShare: "Share the bot", rDonate: "Support the project", rDonateText: "Any amount in ⭐",
+      rContact: "Write to us", rHelp: "Help", rLegal: "Terms, copyright, privacy",
       footer: "Free and fast 🧡", legal: "Terms and privacy",
-      open: "🚀 Open the bot",
+      copied: "Link copied. Paste it in the chat.", emptyLink: "Paste a link first", emptySong: "Type a song name first",
+      tipKeyboard: "<b>Tip:</b> send <b>/app</b> to the bot and open this app from the 🧰 button, then links go straight to the chat.",
+      pasteFail: "Can't read the clipboard. Paste by hand.",
     },
     uz: {
-      tagline: "Istalgan havoladan yuklab oling",
-      featuresTitle: "Nimalar qiladi",
-      fVideo: "Video", fVideoText: "1080p gacha, MP4",
-      fAudio: "Musiqa", fAudioText: "Istalgan videoni MP3 qilib",
-      fImage: "Rasmlar", fImageText: "Postlar va albomlar",
-      fSong: "Qo'shiq topish", fSongText: "Ovoz yuboring, qo'shiqni toping",
+      heroTitle: "Istalgan havoladan yuklab oling", heroSub: "Video, musiqa va rasmlar bir zumda.",
+      linkPh: "Havolani shu yerga qo'ying", paste: "Qo'yish", download: "Yuklash",
+      songTitle: "Qo'shiq topish", songPh: "Qo'shiq yoki artist nomi", search: "Qidirish",
       sitesTitle: "Qaysi saytlar bilan ishlaydi", more: "+1000 ta boshqa",
-      stepsTitle: "Qanday ishlaydi",
-      step1: "Istalgan ilovadan havolani nusxalang",
-      step2: "Botga yuboring",
-      step3: "Video, MP3 yoki Rasmlarni tanlang",
+      stepsTitle: "Qanday ishlaydi", step1: "Istalgan ilovadan havolani nusxalang", step2: "Shu yerga qo'yib, Yuklash'ni bosing", step3: "Chatda Video, MP3 yoki Rasmlarni tanlang",
+      tabDownload: "Yuklash", tabTools: "Vositalar", tabMe: "Men",
+      toolsTitle: "Fetchoria nimalarni qiladi",
+      tPdf: "Rasmlar → PDF", tPdfText: "Rasmlarni yuboring, bitta PDF oling",
+      tVideo: "Video → GIF / MP3", tVideoText: "Chatga video fayl yuboring",
+      tVoice: "Ovozdan qo'shiq topish", tVoiceText: "Ovozli xabar yuboring, qo'shiq nomini aytaman",
+      tSong: "Qo'shiq qidirish", tSongText: "Nomini yozing, MP3 oling",
+      tMusicLinks: "Spotify va Apple Music havolalari", tMusicLinksText: "Havolani tashlang, qo'shiqni MP3 qilib beraman",
+      tSubs: "YouTube subtitrlari", tSubsText: "Istalgan YouTube videosining .srt faylini oling",
+      tPics: "Rasmlar va albomlar", tPicsText: "Post va pinlardan rasm yuklash",
+      meTitle: "Mening hisobim", moreTitle: "Yana",
+      rSettings: "Sozlamalar", rSettingsText: "Standart sifat, avtomatik MP3",
+      rHistory: "Tarix", rHistoryText: "Oxirgi yuklashlaringiz",
+      rInvite: "Do'stlarni taklif qilish", rInviteText: "Shaxsiy havola va bonuslar",
+      rLanguage: "Til", rLanguageText: "Bot tilini almashtirish",
+      rShare: "Botni ulashish", rDonate: "Loyihani qo'llab-quvvatlash", rDonateText: "Istalgan miqdorda ⭐",
+      rContact: "Bizga yozish", rHelp: "Yordam", rLegal: "Shartlar, mualliflik huquqi, maxfiylik",
       footer: "Bepul va tez 🧡", legal: "Shartlar va maxfiylik",
-      open: "🚀 Botni ochish",
+      copied: "Havola nusxalandi. Chatga qo'ying.", emptyLink: "Avval havolani qo'ying", emptySong: "Avval qo'shiq nomini yozing",
+      tipKeyboard: "<b>Maslahat:</b> botga <b>/app</b> yuboring va ilovani 🧰 tugmasidan oching, shunda havolalar to'g'ridan-to'g'ri chatga ketadi.",
+      pasteFail: "Buferni o'qib bo'lmadi. Qo'lda qo'ying.",
     },
     ru: {
-      tagline: "Скачивайте всё по любой ссылке",
-      featuresTitle: "Что умеет",
-      fVideo: "Видео", fVideoText: "До 1080p, MP4",
-      fAudio: "Музыка", fAudioText: "Любое видео в MP3",
-      fImage: "Картинки", fImageText: "Посты и альбомы",
-      fSong: "Поиск песен", fSongText: "Отправьте голосовое и найдите песню",
+      heroTitle: "Скачивайте всё по любой ссылке", heroSub: "Видео, музыка и картинки за секунды.",
+      linkPh: "Вставьте ссылку сюда", paste: "Вставить", download: "Скачать",
+      songTitle: "Найти песню", songPh: "Название песни или артист", search: "Искать",
       sitesTitle: "Работает с", more: "+1000 других",
-      stepsTitle: "Как это работает",
-      step1: "Скопируйте ссылку из любого приложения",
-      step2: "Отправьте её боту",
-      step3: "Выберите Видео, MP3 или Картинки",
+      stepsTitle: "Как это работает", step1: "Скопируйте ссылку из любого приложения", step2: "Вставьте сюда и нажмите «Скачать»", step3: "В чате выберите Видео, MP3 или Картинки",
+      tabDownload: "Скачать", tabTools: "Инструменты", tabMe: "Я",
+      toolsTitle: "Всё, что умеет Fetchoria",
+      tPdf: "Картинки → PDF", tPdfText: "Пришлите фото, получите один PDF",
+      tVideo: "Видео → GIF / MP3", tVideoText: "Пришлите видеофайл в чат",
+      tVoice: "Песня по голосу", tVoiceText: "Пришлите голосовое, я назову песню",
+      tSong: "Поиск песен", tSongText: "Введите название, получите MP3",
+      tMusicLinks: "Ссылки Spotify и Apple Music", tMusicLinksText: "Вставьте ссылку, получите песню в MP3",
+      tSubs: "Субтитры YouTube", tSubsText: "Файлы .srt для любого видео YouTube",
+      tPics: "Картинки и альбомы", tPicsText: "Скачивайте фото из постов и пинов",
+      meTitle: "Мой аккаунт", moreTitle: "Ещё",
+      rSettings: "Настройки", rSettingsText: "Качество по умолчанию, авто-MP3",
+      rHistory: "История", rHistoryText: "Ваши последние загрузки",
+      rInvite: "Пригласить друзей", rInviteText: "Личная ссылка и бонусы",
+      rLanguage: "Язык", rLanguageText: "Сменить язык бота",
+      rShare: "Поделиться ботом", rDonate: "Поддержать проект", rDonateText: "Любая сумма в ⭐",
+      rContact: "Написать нам", rHelp: "Помощь", rLegal: "Условия, авторские права, конфиденциальность",
       footer: "Бесплатно и быстро 🧡", legal: "Условия и конфиденциальность",
-      open: "🚀 Открыть бота",
+      copied: "Ссылка скопирована. Вставьте её в чат.", emptyLink: "Сначала вставьте ссылку", emptySong: "Сначала введите название песни",
+      tipKeyboard: "<b>Совет:</b> отправьте боту <b>/app</b> и откройте приложение кнопкой 🧰, тогда ссылки сразу попадут в чат.",
+      pasteFail: "Не удалось прочитать буфер. Вставьте вручную.",
     },
   };
 
+  const $ = (selector) => document.querySelector(selector);
+  const $$ = (selector) => document.querySelectorAll(selector);
   const tg = window.Telegram && window.Telegram.WebApp;
-  const code = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.language_code)
-    || navigator.language || "en";
-  const lang = TEXTS[code.slice(0, 2).toLowerCase()] ? code.slice(0, 2).toLowerCase() : "en";
-  document.documentElement.lang = lang;
-  document.querySelectorAll("[data-i18n]").forEach((el) => {
-    el.textContent = TEXTS[lang][el.dataset.i18n];
+  let lang = "en";
+
+  /* ---------- language ---------- */
+  function pickLanguage() {
+    let saved = null;
+    try { saved = localStorage.getItem("lang"); } catch (e) { /* storage may be blocked */ }
+    const fromTelegram = tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.language_code;
+    const code = (saved || fromTelegram || navigator.language || "en").slice(0, 2).toLowerCase();
+    return TEXTS[code] ? code : "en";
+  }
+
+  function applyLanguage(code) {
+    lang = code;
+    document.documentElement.lang = code;
+    $$("[data-i18n]").forEach((el) => { el.textContent = TEXTS[code][el.dataset.i18n]; });
+    $$("[data-i18n-ph]").forEach((el) => { el.placeholder = TEXTS[code][el.dataset.i18nPh]; });
+    $$(".langs button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === code)));
+    $("#tip").innerHTML = TEXTS[code].tipKeyboard;
+    try { localStorage.setItem("lang", code); } catch (e) { /* ignore */ }
+  }
+
+  const say = (key) => TEXTS[lang][key];
+
+  /* ---------- small helpers ---------- */
+  function haptic(kind) {
+    try { tg.HapticFeedback.impactOccurred(kind || "light"); } catch (e) { /* not in Telegram */ }
+  }
+
+  let toastTimer;
+  function toast(text) {
+    const el = $("#toast");
+    el.textContent = text;
+    el.classList.add("on");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove("on"), 2200);
+  }
+
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; } catch (e) { /* fall back below */ }
+    const area = document.createElement("textarea");
+    area.value = text;
+    document.body.appendChild(area);
+    area.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    area.remove();
+    return ok;
+  }
+
+  /* ---------- talking to the bot ---------- */
+  // sendData works only when the app was opened from the keyboard button (/app):
+  // such launches carry no query_id.
+  function canSendData() {
+    return !!(tg && tg.initData && !(tg.initDataUnsafe && tg.initDataUnsafe.query_id));
+  }
+
+  function openBot(startParam) {
+    const url = "https://t.me/" + BOT + (startParam ? "?start=" + startParam : "");
+    if (tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url, "_blank");
+  }
+
+  // "link" and "search" carry text; any other command is just a name.
+  async function sendToBot(payload) {
+    haptic("medium");
+    if (canSendData()) { tg.sendData(JSON.stringify(payload)); return; }
+    if (payload.text) {
+      await copyText(payload.text);
+      toast(say("copied"));
+      $("#tip").hidden = false;
+      setTimeout(() => (tg ? tg.close() : openBot()), 1400);
+      return;
+    }
+    openBot("cmd_" + payload.cmd);
+  }
+
+  /* ---------- tabs ---------- */
+  function showTab(name) {
+    $$("section").forEach((s) => { s.hidden = s.id !== "tab-" + name; });
+    $$(".tab").forEach((t) => t.setAttribute("aria-selected", String(t.dataset.tab === name)));
+    window.scrollTo({ top: 0 });
+    haptic("light");
+  }
+
+  /* ---------- wiring ---------- */
+  $$(".tab").forEach((t) => t.addEventListener("click", () => showTab(t.dataset.tab)));
+  $$(".langs button").forEach((b) => b.addEventListener("click", () => { applyLanguage(b.dataset.lang); haptic("light"); }));
+  $$("[data-cmd]").forEach((b) => b.addEventListener("click", () => sendToBot({ cmd: b.dataset.cmd })));
+  $$("[data-chat]").forEach((b) => b.addEventListener("click", () => { haptic("light"); tg ? tg.close() : openBot(); }));
+  $$("[data-focus]").forEach((b) => b.addEventListener("click", () => {
+    showTab("download");
+    setTimeout(() => $("#" + b.dataset.focus).focus(), 60);
+  }));
+
+  $("#paste").addEventListener("click", async () => {
+    haptic("light");
+    try {
+      const text = tg && tg.readTextFromClipboard
+        ? await new Promise((resolve) => tg.readTextFromClipboard(resolve))
+        : await navigator.clipboard.readText();
+      if (text) { $("#link").value = text.trim(); return; }
+    } catch (e) { /* handled below */ }
+    toast(say("pasteFail"));
   });
 
+  $("#download").addEventListener("click", () => {
+    const text = $("#link").value.trim();
+    if (!text) { toast(say("emptyLink")); $("#link").focus(); return; }
+    sendToBot({ cmd: "link", text });
+  });
+  $("#link").addEventListener("keydown", (e) => { if (e.key === "Enter") $("#download").click(); });
+
+  $("#search").addEventListener("click", () => {
+    const text = $("#song").value.trim();
+    if (!text) { toast(say("emptySong")); $("#song").focus(); return; }
+    sendToBot({ cmd: "search", text });
+  });
+  $("#song").addEventListener("keydown", (e) => { if (e.key === "Enter") $("#search").click(); });
+
+  /* ---------- start ---------- */
+  applyLanguage(pickLanguage());
+  // Inside Telegram but not opened from the keyboard button: explain how to send links straight to the chat.
+  $("#tip").hidden = !(tg && tg.initData && !canSendData());
   if (tg) {
     tg.ready();
     tg.expand();
-    // Inside Telegram the button closes the app and leaves the user in the bot chat.
-    document.getElementById("open").addEventListener("click", (event) => {
-      event.preventDefault();
-      tg.close();
-    });
+    try { tg.disableVerticalSwipes(); } catch (e) { /* older clients */ }
+    const dark = tg.colorScheme === "dark";
+    document.documentElement.dataset.theme = dark ? "dark" : "light";
+    try { tg.setHeaderColor(dark ? "#14151b" : "#fff7ed"); tg.setBackgroundColor(dark ? "#14151b" : "#fff7ed"); } catch (e) { /* ignore */ }
+  } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    document.documentElement.dataset.theme = "dark";
   }
 </script>
 </body>
