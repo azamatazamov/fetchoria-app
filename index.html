@@ -403,7 +403,11 @@
 
   function openBot(startParam) {
     const url = "https://t.me/" + BOT + (startParam ? "?start=" + startParam : "");
-    if (tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url, "_blank");
+    if (tg && tg.openTelegramLink) {
+      try { tg.openTelegramLink(url); } catch (e) { /* ignore */ }
+      // the app covers the chat: close it so the bot's reply is visible
+      setTimeout(() => { try { tg.close(); } catch (e) { /* ignore */ } }, 300);
+    } else window.open(url, "_blank");
   }
 
   // "link" and "search" carry text; any other command is just a name.
