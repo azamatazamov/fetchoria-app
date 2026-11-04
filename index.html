@@ -143,6 +143,33 @@
   .tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 7px 4px; border-radius: 17px; color: var(--muted); font-size: 12px; font-weight: 700; }
   .tab svg { width: 24px; height: 24px; }
   .tab[aria-selected="true"] { background: linear-gradient(135deg, var(--orange-soft), var(--orange)); color: #fff; }
+
+  /* account pages */
+  .page-head { display: flex; align-items: center; gap: 10px; margin: 6px 0 4px; }
+  .page-head h2 { margin: 0; }
+  .back { width: 38px; height: 38px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); font-size: 20px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 14px; margin: 10px 0; }
+  .card h3 { margin: 0 0 10px; font-size: 14px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .6px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { padding: 9px 14px; border-radius: 999px; background: var(--field); font-weight: 600; border: 2px solid transparent; }
+  .chip[aria-pressed="true"] { border-color: var(--orange); color: var(--orange); }
+  .switch { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; text-align: left; }
+  .switch small { display: block; color: var(--muted); }
+  .knob { flex: none; width: 50px; height: 30px; border-radius: 999px; background: var(--field); position: relative; transition: background .2s; }
+  .knob::after { content: ""; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.3); transition: transform .2s; }
+  .switch[aria-checked="true"] .knob { background: var(--orange); }
+  .switch[aria-checked="true"] .knob::after { transform: translateX(20px); }
+  .hist { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .hist:last-child { border-bottom: 0; }
+  .hist .tx { flex: 1; min-width: 0; }
+  .hist b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hist small { color: var(--muted); }
+  .mini { padding: 8px 12px; border-radius: 12px; background: var(--field); font-size: 14px; font-weight: 600; }
+  .primary { width: 100%; padding: 13px; border-radius: 14px; background: linear-gradient(135deg, var(--orange-soft), var(--orange)); color: #fff; font-weight: 700; margin-top: 8px; }
+  .danger { width: 100%; padding: 12px; border-radius: 14px; background: var(--field); color: #d33; font-weight: 700; margin-top: 8px; }
+  .big { font-size: 34px; font-weight: 800; color: var(--orange); }
+  .linkbox { word-break: break-all; font-size: 14px; color: var(--muted); margin: 8px 0; user-select: text; }
+  .muted { color: var(--muted); }
 </style>
 </head>
 <body>
@@ -220,10 +247,10 @@
   <section id="tab-me" hidden>
     <h2 data-i18n="meTitle"></h2>
     <div class="list">
-      <button class="row" data-cmd="settings"><span class="ic">⚙️</span><span class="tx"><b data-i18n="rSettings"></b><small data-i18n="rSettingsText"></small></span><span class="chev">›</span></button>
-      <button class="row" data-cmd="history"><span class="ic">🕘</span><span class="tx"><b data-i18n="rHistory"></b><small data-i18n="rHistoryText"></small></span><span class="chev">›</span></button>
-      <button class="row" data-cmd="invite"><span class="ic">🎁</span><span class="tx"><b data-i18n="rInvite"></b><small data-i18n="rInviteText"></small></span><span class="chev">›</span></button>
-      <button class="row" data-cmd="language"><span class="ic">🌍</span><span class="tx"><b data-i18n="rLanguage"></b><small data-i18n="rLanguageText"></small></span><span class="chev">›</span></button>
+      <button class="row" data-cmd="settings" data-page="settings"><span class="ic">⚙️</span><span class="tx"><b data-i18n="rSettings"></b><small data-i18n="rSettingsText"></small></span><span class="chev">›</span></button>
+      <button class="row" data-cmd="history" data-page="history"><span class="ic">🕘</span><span class="tx"><b data-i18n="rHistory"></b><small data-i18n="rHistoryText"></small></span><span class="chev">›</span></button>
+      <button class="row" data-cmd="invite" data-page="invite"><span class="ic">🎁</span><span class="tx"><b data-i18n="rInvite"></b><small data-i18n="rInviteText"></small></span><span class="chev">›</span></button>
+      <button class="row" data-cmd="language" data-page="language"><span class="ic">🌍</span><span class="tx"><b data-i18n="rLanguage"></b><small data-i18n="rLanguageText"></small></span><span class="chev">›</span></button>
     </div>
     <h2 data-i18n="moreTitle"></h2>
     <div class="list">
@@ -234,6 +261,29 @@
       <button class="row" data-cmd="legal"><span class="ic">📄</span><span class="tx"><b data-i18n="rLegal"></b></span><span class="chev">›</span></button>
     </div>
     <footer><span data-i18n="footer"></span> · <a href="legal.html" data-i18n="legal"></a></footer>
+  </section>
+  <!-- ACCOUNT PAGES (served by the bot's API) -->
+  <section id="page-settings" hidden>
+    <div class="page-head"><button class="back" data-back aria-label="Back">‹</button><h2 data-i18n="rSettings"></h2></div>
+    <div class="card"><h3 data-i18n="qualityTitle"></h3><div class="chips" id="qualities"></div></div>
+    <div class="card"><button class="switch" id="automp3" role="switch" aria-checked="false"><span><b data-i18n="autoMp3"></b><small data-i18n="autoMp3Text"></small></span><span class="knob"></span></button></div>
+    <div class="card"><h3 data-i18n="languageTitle"></h3><div class="chips" id="botlangs"></div></div>
+  </section>
+  <section id="page-language" hidden>
+    <div class="page-head"><button class="back" data-back aria-label="Back">‹</button><h2 data-i18n="rLanguage"></h2></div>
+    <div class="card"><div class="chips" id="botlangs2"></div></div>
+  </section>
+  <section id="page-history" hidden>
+    <div class="page-head"><button class="back" data-back aria-label="Back">‹</button><h2 data-i18n="rHistory"></h2></div>
+    <div class="card" id="histlist"></div>
+    <button class="danger" id="clearhist" data-i18n="clearHistory" hidden></button>
+  </section>
+  <section id="page-invite" hidden>
+    <div class="page-head"><button class="back" data-back aria-label="Back">‹</button><h2 data-i18n="rInvite"></h2></div>
+    <div class="card"><h3 data-i18n="invitedCount"></h3><div class="big" id="invited">0</div><p class="muted" id="invitetext"></p></div>
+    <div class="card"><h3 data-i18n="yourLink"></h3><div class="linkbox" id="mylink"></div>
+      <button class="primary" id="sharelink" data-i18n="inviteShare"></button>
+      <button class="danger" style="color:var(--text)" id="copylink" data-i18n="inviteCopy"></button></div>
   </section>
 </main>
 
@@ -285,6 +335,11 @@
       copied: "Link copied. Paste it in the chat.", emptyLink: "Paste a link first", emptySong: "Type a song name first",
       tipKeyboard: "<b>Tip:</b> send <b>/app</b> to the bot and open this app from the 🧰 button, then links go straight to the chat.",
       pasteFail: "Can't read the clipboard. Paste by hand.",
+      back: "Back", qualityTitle: "Video quality", qualityAsk: "Ask every time", autoMp3: "Auto MP3", autoMp3Text: "Send music as MP3 straight away",
+      languageTitle: "Language", historyEmpty: "No downloads yet. Your last ones will appear here.", clearHistory: "Clear history",
+      cleared: "History cleared", copyLink: "Copy link", invitedCount: "Friends invited", inviteText: "Each friend who joins through your link gives you {n} extra downloads a day.",
+      inviteShare: "Send to a friend", inviteCopy: "Copy my link", yourLink: "Your personal link", saved: "Saved", loadFail: "Could not load. Check your connection.",
+      unlimited: "no limit",
     },
     uz: {
       heroTitle: "Istalgan havoladan yuklab oling", heroSub: "Video, musiqa va rasmlar bir zumda.",
@@ -312,6 +367,11 @@
       copied: "Havola nusxalandi. Chatga qo'ying.", emptyLink: "Avval havolani qo'ying", emptySong: "Avval qo'shiq nomini yozing",
       tipKeyboard: "<b>Maslahat:</b> botga <b>/app</b> yuboring va ilovani 🧰 tugmasidan oching, shunda havolalar to'g'ridan-to'g'ri chatga ketadi.",
       pasteFail: "Buferni o'qib bo'lmadi. Qo'lda qo'ying.",
+      back: "Orqaga", qualityTitle: "Video sifati", qualityAsk: "Har safar so'rash", autoMp3: "Avtomatik MP3", autoMp3Text: "Musiqani darhol MP3 qilib yuborish",
+      languageTitle: "Til", historyEmpty: "Hali yuklashlar yo'q. Oxirgilari shu yerda chiqadi.", clearHistory: "Tarixni tozalash",
+      cleared: "Tarix tozalandi", copyLink: "Havolani nusxalash", invitedCount: "Taklif qilingan do'stlar", inviteText: "Havolangiz orqali qo'shilgan har bir do'st sizga kuniga {n} ta qo'shimcha yuklash beradi.",
+      inviteShare: "Do'stga yuborish", inviteCopy: "Havolamni nusxalash", yourLink: "Shaxsiy havolangiz", saved: "Saqlandi", loadFail: "Yuklab bo'lmadi. Internetni tekshiring.",
+      unlimited: "cheksiz",
     },
     ru: {
       heroTitle: "Скачивайте всё по любой ссылке", heroSub: "Видео, музыка и картинки за секунды.",
@@ -339,6 +399,11 @@
       copied: "Ссылка скопирована. Вставьте её в чат.", emptyLink: "Сначала вставьте ссылку", emptySong: "Сначала введите название песни",
       tipKeyboard: "<b>Совет:</b> отправьте боту <b>/app</b> и откройте приложение кнопкой 🧰, тогда ссылки сразу попадут в чат.",
       pasteFail: "Не удалось прочитать буфер. Вставьте вручную.",
+      back: "Назад", qualityTitle: "Качество видео", qualityAsk: "Спрашивать каждый раз", autoMp3: "Авто-MP3", autoMp3Text: "Сразу отправлять музыку в MP3",
+      languageTitle: "Язык", historyEmpty: "Загрузок пока нет. Последние появятся здесь.", clearHistory: "Очистить историю",
+      cleared: "История очищена", copyLink: "Копировать ссылку", invitedCount: "Приглашено друзей", inviteText: "Каждый друг, пришедший по вашей ссылке, даёт вам {n} дополнительных загрузок в день.",
+      inviteShare: "Отправить другу", inviteCopy: "Копировать мою ссылку", yourLink: "Ваша личная ссылка", saved: "Сохранено", loadFail: "Не удалось загрузить. Проверьте соединение.",
+      unlimited: "без лимита",
     },
   };
 
@@ -430,6 +495,115 @@
     $$(".tab").forEach((t) => t.setAttribute("aria-selected", String(t.dataset.tab === name)));
     window.scrollTo({ top: 0 });
     haptic("light");
+  }
+
+  /* ---------- account pages (data comes from the bot's API) ---------- */
+  const API = "";   // https address of the bot's API; empty = open the chat instead
+  const LANG_NAMES = { en: "English", uz: "O'zbekcha", ru: "Русский" };
+  let account = null;
+  let currentPage = null;
+
+  async function api(action, body) {
+    const res = await fetch(API + "/api/" + action, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: "tma " + (tg ? tg.initData : "") },
+      body: JSON.stringify(body || {}),
+    });
+    if (!res.ok) throw new Error(String(res.status));
+    account = await res.json();
+    return account;
+  }
+
+  function chips(box, items, current, onPick) {
+    box.innerHTML = "";
+    items.forEach(([value, label]) => {
+      const b = document.createElement("button");
+      b.className = "chip"; b.textContent = label;
+      b.setAttribute("aria-pressed", String(value === current));
+      b.addEventListener("click", () => { haptic("light"); onPick(value); });
+      box.appendChild(b);
+    });
+  }
+
+  async function change(body) {
+    try { await api("settings", body); toast(say("saved")); if (body.lang) applyLanguage(body.lang); renderPage(currentPage); }
+    catch (e) { toast(say("loadFail")); }
+  }
+
+  function renderPage(name) {
+    if (!account) return;
+    const langs = Object.keys(LANG_NAMES).map((c) => [c, LANG_NAMES[c]]);
+    chips($("#qualities"), [[0, say("qualityAsk")], ...account.qualities.map((q) => [q, q + "p"])], account.quality, (q) => change({ quality: q }));
+    $("#automp3").setAttribute("aria-checked", String(account.auto_mp3));
+    chips($("#botlangs"), langs, account.lang, (l) => change({ lang: l }));
+    chips($("#botlangs2"), langs, account.lang, (l) => change({ lang: l }));
+    renderHistory();
+    $("#invited").textContent = account.invited;
+    $("#invitetext").textContent = say("inviteText").replace("{n}", account.bonus);
+    $("#mylink").textContent = account.invite_link;
+  }
+
+  function renderHistory() {
+    const box = $("#histlist");
+    box.innerHTML = "";
+    $("#clearhist").hidden = !account.history.length;
+    if (!account.history.length) { box.innerHTML = '<p class="muted"></p>'; box.firstChild.textContent = say("historyEmpty"); return; }
+    account.history.forEach((item) => {
+      const row = document.createElement("div");
+      row.className = "hist";
+      const icon = item.kind === "v" ? "🎬" : "🎵";
+      const quality = item.kind === "v" && item.height ? item.height + "p" : "MP3";
+      row.innerHTML = '<span>' + icon + '</span><div class="tx"><b></b><small></small></div><button class="mini"></button>';
+      row.querySelector("b").textContent = item.title;
+      row.querySelector("small").textContent = quality;
+      const copy = row.querySelector("button");
+      copy.textContent = say("copyLink");
+      copy.addEventListener("click", async () => { haptic("light"); await copyText(item.url); toast(say("copied")); });
+      box.appendChild(row);
+    });
+  }
+
+  function showPage(name) {
+    currentPage = name;
+    $$("section").forEach((x) => { x.hidden = x.id !== "page-" + name; });
+    window.scrollTo({ top: 0 });
+    if (tg && tg.BackButton) { tg.BackButton.show(); }
+    renderPage(name);
+  }
+
+  function closePage() {
+    currentPage = null;
+    if (tg && tg.BackButton) tg.BackButton.hide();
+    showTab("me");
+  }
+
+  async function openPage(name) {
+    haptic("light");
+    try { if (!account) await api("me"); showPage(name); }
+    catch (e) { toast(say("loadFail")); }
+  }
+
+  if (API) {
+    $$("[data-page]").forEach((b) => {
+      b.removeAttribute("data-cmd");
+      b.addEventListener("click", () => openPage(b.dataset.page));
+    });
+    $$("[data-back]").forEach((b) => b.addEventListener("click", closePage));
+    if (tg && tg.BackButton) tg.BackButton.onClick(closePage);
+    $("#automp3").addEventListener("click", () => change({ auto_mp3: !account.auto_mp3 }));
+    $("#clearhist").addEventListener("click", async () => {
+      try { await api("clear_history"); toast(say("cleared")); renderPage(); } catch (e) { toast(say("loadFail")); }
+    });
+    $$('[data-cmd="share"]').forEach((b) => { b.removeAttribute("data-cmd"); b.addEventListener("click", () => {
+      const url = "https://t.me/share/url?url=" + encodeURIComponent("https://t.me/" + BOT);
+      if (tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url, "_blank");
+    }); });
+    $$('[data-cmd="legal"]').forEach((b) => { b.removeAttribute("data-cmd"); b.addEventListener("click", () => { location.href = "legal.html"; }); });
+    $("#copylink").addEventListener("click", async () => { await copyText(account.invite_link); toast(say("copied")); });
+    $("#sharelink").addEventListener("click", () => {
+      const url = "https://t.me/share/url?url=" + encodeURIComponent(account.invite_link);
+      if (tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url, "_blank");
+    });
   }
 
   /* ---------- wiring ---------- */
