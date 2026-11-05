@@ -159,6 +159,99 @@
   .knob::after { content: ""; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.3); transition: transform .2s; }
   .switch[aria-checked="true"] .knob { background: var(--orange); }
   .switch[aria-checked="true"] .knob::after { transform: translateX(20px); }
+  .hist { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .hist:last-child { border-bottom: 0; }
+  .hist .pic { flex: none; width: 64px; height: 64px; border-radius: 14px; background: var(--field) center / cover no-repeat; display: grid; place-items: center; font-size: 26px; }
+  .hist .tx { flex: 1; min-width: 0; }
+  .hist b { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 15px; line-height: 1.3; }
+  .hist small { display: block; margin-top: 3px; color: var(--muted); }
+  .hist .copy { flex: none; width: 40px; height: 40px; border-radius: 12px; background: var(--field); font-size: 18px; }
+  .mini { padding: 9px 12px; border-radius: 12px; background: #fff0e0; color: var(--orange); font-weight: 700; font-size: 14px; }
+  .go {
+    display: block; width: 100%; margin-top: 12px; padding: 15px; border-radius: 16px; font-weight: 800; font-size: 17px;
+    background: #1d1a17; color: #fff; box-shadow: 0 8px 20px rgba(0, 0, 0, .25);
+  }
+  .go:active, .mini:active, .row:active, .tool:active, .tab:active { transform: scale(.98); }
+
+  /* song search */
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 14px; }
+  .card .field { background: var(--field); }
+  .card .field input { color: var(--text); }
+  .card .field input::placeholder { color: var(--muted); }
+  .card .mini { background: var(--orange); color: #fff; }
+
+  /* chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 6px 13px; font-size: 14px; font-weight: 600; }
+
+  /* tips */
+  .tip { margin: 14px 2px 0; padding: 12px 14px; border-radius: 16px; background: var(--field); color: var(--muted); font-size: 14px; }
+  .tip b { color: var(--text); }
+
+  /* steps */
+  ol { list-style: none; margin: 0; padding: 0; counter-reset: s; display: grid; gap: 8px; }
+  li.step { counter-increment: s; display: flex; gap: 12px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; }
+  li.step::before {
+    content: counter(s); flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--orange-soft), var(--orange)); color: #fff; font-weight: 800; font-size: 13px;
+  }
+
+  /* tools */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tool { text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 14px; display: flex; flex-direction: column; gap: 4px; min-height: 120px; }
+  .tool .ic { font-size: 28px; line-height: 1; margin-bottom: 4px; }
+  .tool b { font-size: 15px; }
+  .tool span { color: var(--muted); font-size: 13px; line-height: 1.35; }
+  .tool.wide { grid-column: 1 / -1; min-height: 0; flex-direction: row; align-items: center; gap: 12px; }
+  .tool.wide .ic { margin: 0; }
+
+  /* rows (account) */
+  .list { background: var(--card); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
+  .row { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+  .row:last-child { border-bottom: 0; }
+  .row .ic { width: 34px; height: 34px; display: grid; place-items: center; font-size: 19px; background: var(--field); border-radius: 11px; flex: none; }
+  .row .tx { flex: 1; min-width: 0; }
+  .row .tx b { display: block; font-size: 16px; font-weight: 600; }
+  .row .tx small { color: var(--muted); font-size: 13px; }
+  .row .chev { color: var(--muted); font-size: 20px; }
+
+  footer { text-align: center; color: var(--muted); font-size: 13px; margin: 26px 0 0; }
+  footer a { color: var(--muted); }
+
+  /* toast */
+  .toast {
+    position: fixed; left: 50%; bottom: calc(var(--tabbar) + 24px + env(safe-area-inset-bottom)); transform: translate(-50%, 20px);
+    background: #1d1a17; color: #fff; padding: 11px 16px; border-radius: 14px; font-size: 14px; font-weight: 600;
+    opacity: 0; pointer-events: none; transition: .25s; max-width: calc(100% - 32px); text-align: center; z-index: 30;
+  }
+  .toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+  /* tab bar */
+  nav.tabbar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: flex; justify-content: center;
+    padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+    background: linear-gradient(to top, var(--bg) 72%, transparent);
+  }
+  .tabs { display: flex; width: 100%; max-width: 560px; background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 5px; box-shadow: var(--shadow); }
+  .tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 7px 4px; border-radius: 17px; color: var(--muted); font-size: 12px; font-weight: 700; }
+  .tab svg { width: 24px; height: 24px; }
+  .tab[aria-selected="true"] { background: linear-gradient(135deg, var(--orange-soft), var(--orange)); color: #fff; }
+
+  /* account pages */
+  .page-head { display: flex; align-items: center; gap: 10px; margin: 6px 0 4px; }
+  .page-head h2 { margin: 0; }
+  .back { width: 38px; height: 38px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); font-size: 20px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 14px; margin: 10px 0; }
+  .card h3 { margin: 0 0 10px; font-size: 14px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .6px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { padding: 9px 14px; border-radius: 999px; background: var(--field); font-weight: 600; border: 2px solid transparent; }
+  .chip[aria-pressed="true"] { border-color: var(--orange); color: var(--orange); }
+  .switch { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; text-align: left; }
+  .switch small { display: block; color: var(--muted); }
+  .knob { flex: none; width: 50px; height: 30px; border-radius: 999px; background: var(--field); position: relative; transition: background .2s; }
+  .knob::after { content: ""; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.3); transition: transform .2s; }
+  .switch[aria-checked="true"] .knob { background: var(--orange); }
+  .switch[aria-checked="true"] .knob::after { transform: translateX(20px); }
   .hist { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
   .hist:last-child { border-bottom: 0; }
   .hist .tx { flex: 1; min-width: 0; }
@@ -250,7 +343,6 @@
       <button class="row" data-cmd="settings" data-page="settings"><span class="ic">⚙️</span><span class="tx"><b data-i18n="rSettings"></b><small data-i18n="rSettingsText"></small></span><span class="chev">›</span></button>
       <button class="row" data-cmd="history" data-page="history"><span class="ic">🕘</span><span class="tx"><b data-i18n="rHistory"></b><small data-i18n="rHistoryText"></small></span><span class="chev">›</span></button>
       <button class="row" data-cmd="invite" data-page="invite"><span class="ic">🎁</span><span class="tx"><b data-i18n="rInvite"></b><small data-i18n="rInviteText"></small></span><span class="chev">›</span></button>
-      <button class="row" data-cmd="language" data-page="language"><span class="ic">🌍</span><span class="tx"><b data-i18n="rLanguage"></b><small data-i18n="rLanguageText"></small></span><span class="chev">›</span></button>
     </div>
     <h2 data-i18n="moreTitle"></h2>
     <div class="list">
@@ -268,10 +360,6 @@
     <div class="card"><h3 data-i18n="qualityTitle"></h3><div class="chips" id="qualities"></div></div>
     <div class="card"><button class="switch" id="automp3" role="switch" aria-checked="false"><span><b data-i18n="autoMp3"></b><small data-i18n="autoMp3Text"></small></span><span class="knob"></span></button></div>
     <div class="card"><h3 data-i18n="languageTitle"></h3><div class="chips" id="botlangs"></div></div>
-  </section>
-  <section id="page-language" hidden>
-    <div class="page-head"><button class="back" data-back aria-label="Back">‹</button><h2 data-i18n="rLanguage"></h2></div>
-    <div class="card"><div class="chips" id="botlangs2"></div></div>
   </section>
   <section id="page-history" hidden>
     <div class="page-head"><button class="back" data-back aria-label="Back">‹</button><h2 data-i18n="rHistory"></h2></div>
@@ -536,7 +624,6 @@
     chips($("#qualities"), [[0, say("qualityAsk")], ...account.qualities.map((q) => [q, q + "p"])], account.quality, (q) => change({ quality: q }));
     $("#automp3").setAttribute("aria-checked", String(account.auto_mp3));
     chips($("#botlangs"), langs, account.lang, (l) => change({ lang: l }));
-    chips($("#botlangs2"), langs, account.lang, (l) => change({ lang: l }));
     renderHistory();
     $("#invited").textContent = account.invited;
     $("#invitetext").textContent = say("inviteText").replace("{n}", account.bonus);
@@ -551,14 +638,13 @@
     account.history.forEach((item) => {
       const row = document.createElement("div");
       row.className = "hist";
-      const icon = item.kind === "v" ? "🎬" : "🎵";
       const quality = item.kind === "v" && item.height ? item.height + "p" : "MP3";
-      row.innerHTML = '<span>' + icon + '</span><div class="tx"><b></b><small></small></div><button class="mini"></button>';
+      row.innerHTML = '<div class="pic"></div><div class="tx"><b></b><small></small></div><button class="copy" aria-label="Copy">📋</button>';
+      const pic = row.querySelector(".pic");
+      if (item.thumb) pic.style.backgroundImage = "url(" + item.thumb + ")"; else pic.textContent = item.kind === "v" ? "🎬" : "🎵";
       row.querySelector("b").textContent = item.title;
-      row.querySelector("small").textContent = quality;
-      const copy = row.querySelector("button");
-      copy.textContent = say("copyLink");
-      copy.addEventListener("click", async () => { haptic("light"); await copyText(item.url); toast(say("copied")); });
+      row.querySelector("small").textContent = item.site + " · " + quality;
+      row.querySelector(".copy").addEventListener("click", async () => { haptic("light"); await copyText(item.url); toast(say("copied")); });
       box.appendChild(row);
     });
   }
@@ -608,7 +694,13 @@
 
   /* ---------- wiring ---------- */
   $$(".tab").forEach((t) => t.addEventListener("click", () => showTab(t.dataset.tab)));
-  $$(".langs button").forEach((b) => b.addEventListener("click", () => { applyLanguage(b.dataset.lang); haptic("light"); }));
+  $$(".langs button").forEach((b) => b.addEventListener("click", async () => {
+    applyLanguage(b.dataset.lang);
+    haptic("light");
+    if (API) {
+      try { await api("settings", { lang: b.dataset.lang }); if (currentPage) renderPage(currentPage); } catch (e) { /* app language still changed */ }
+    }
+  }));
   $$("[data-cmd]").forEach((b) => b.addEventListener("click", () => sendToBot({ cmd: b.dataset.cmd })));
   $$("[data-chat]").forEach((b) => b.addEventListener("click", () => { haptic("light"); tg ? tg.close() : openBot(); }));
   $$("[data-focus]").forEach((b) => b.addEventListener("click", () => {
