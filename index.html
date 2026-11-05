@@ -278,11 +278,6 @@
       </svg>
       fetchoria
     </div>
-    <div class="langs" role="group" aria-label="Language">
-      <button data-lang="en" aria-pressed="false">EN</button>
-      <button data-lang="uz" aria-pressed="false">UZ</button>
-      <button data-lang="ru" aria-pressed="false">RU</button>
-    </div>
   </header>
 
   <!-- DOWNLOAD -->
@@ -343,6 +338,7 @@
       <button class="row" data-cmd="settings" data-page="settings"><span class="ic">⚙️</span><span class="tx"><b data-i18n="rSettings"></b><small data-i18n="rSettingsText"></small></span><span class="chev">›</span></button>
       <button class="row" data-cmd="history" data-page="history"><span class="ic">🕘</span><span class="tx"><b data-i18n="rHistory"></b><small data-i18n="rHistoryText"></small></span><span class="chev">›</span></button>
       <button class="row" data-cmd="invite" data-page="invite"><span class="ic">🎁</span><span class="tx"><b data-i18n="rInvite"></b><small data-i18n="rInviteText"></small></span><span class="chev">›</span></button>
+      <button class="row" data-cmd="language" data-page="language"><span class="ic">🌍</span><span class="tx"><b data-i18n="rLanguage"></b><small data-i18n="rLanguageText"></small></span><span class="chev">›</span></button>
     </div>
     <h2 data-i18n="moreTitle"></h2>
     <div class="list">
@@ -359,7 +355,10 @@
     <div class="page-head"><button class="back" data-back aria-label="Back">‹</button><h2 data-i18n="rSettings"></h2></div>
     <div class="card"><h3 data-i18n="qualityTitle"></h3><div class="chips" id="qualities"></div></div>
     <div class="card"><button class="switch" id="automp3" role="switch" aria-checked="false"><span><b data-i18n="autoMp3"></b><small data-i18n="autoMp3Text"></small></span><span class="knob"></span></button></div>
-    <div class="card"><h3 data-i18n="languageTitle"></h3><div class="chips" id="botlangs"></div></div>
+  </section>
+  <section id="page-language" hidden>
+    <div class="page-head"><button class="back" data-back aria-label="Back">‹</button><h2 data-i18n="rLanguage"></h2></div>
+    <div class="card"><div class="chips" id="botlangs2"></div></div>
   </section>
   <section id="page-history" hidden>
     <div class="page-head"><button class="back" data-back aria-label="Back">‹</button><h2 data-i18n="rHistory"></h2></div>
@@ -623,7 +622,7 @@
     const langs = Object.keys(LANG_NAMES).map((c) => [c, LANG_NAMES[c]]);
     chips($("#qualities"), [[0, say("qualityAsk")], ...account.qualities.map((q) => [q, q + "p"])], account.quality, (q) => change({ quality: q }));
     $("#automp3").setAttribute("aria-checked", String(account.auto_mp3));
-    chips($("#botlangs"), langs, account.lang, (l) => change({ lang: l }));
+    chips($("#botlangs2"), langs, account.lang, (l) => change({ lang: l }));
     renderHistory();
     $("#invited").textContent = account.invited;
     $("#invitetext").textContent = say("inviteText").replace("{n}", account.bonus);
@@ -735,6 +734,7 @@
 
   /* ---------- start ---------- */
   applyLanguage(pickLanguage());
+  if (API && tg && tg.initData) api("me").then((a) => applyLanguage(a.lang)).catch(() => { /* keep the guessed language */ });
   // Inside Telegram but not opened from the keyboard button: explain how to send links straight to the chat.
   $("#tip").hidden = !(tg && tg.initData && !canSendData());
   if (tg) {
